@@ -21,7 +21,6 @@
 add_subdirectory(backends)
 
 # Recipe for RNG loader object
-if(BUILD_SHARED_LIBS)
 add_library(onemath_rng OBJECT)
 add_deprecated_library(onemath_rng)
 target_sources(onemath_rng PRIVATE rng_loader.cpp)
@@ -43,6 +42,4 @@ if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
   add_sycl_to_target(TARGET onemath_rng SOURCES rng_loader.cpp)
 else()
   target_link_libraries(onemath_rng PUBLIC ONEMATH::SYCL::SYCL)
-endif()
-
 endif()

@@ -21,7 +21,6 @@
 add_subdirectory(backends)
 
 # Recipe for LAPACK loader object
-if(BUILD_SHARED_LIBS)
 add_library(onemath_lapack OBJECT)
 add_deprecated_library(onemath_lapack)
 target_sources(onemath_lapack PRIVATE lapack_loader.cpp)
@@ -40,5 +39,3 @@ set_target_properties(onemath_lapack PROPERTIES
   POSITION_INDEPENDENT_CODE ON
 )
 target_link_libraries(onemath_lapack PUBLIC ONEMATH::SYCL::SYCL)
-endif()
-

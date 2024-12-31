@@ -21,7 +21,6 @@
 add_subdirectory(backends)
 
 # Recipe for BLAS loader object
-if(BUILD_SHARED_LIBS)
 add_library(onemath_blas OBJECT)
 add_deprecated_library(onemath_blas)
 target_sources(onemath_blas PRIVATE blas_loader.cpp)
@@ -43,6 +42,4 @@ if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
   add_sycl_to_target(TARGET onemath_blas SOURCES blas_loader.cpp)
 else()
   target_link_libraries(onemath_blas PUBLIC ONEMATH::SYCL::SYCL)
-endif()
-
 endif()

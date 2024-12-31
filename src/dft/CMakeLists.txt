@@ -21,7 +21,6 @@
 add_subdirectory(backends)
 
 # Recipe for DFT loader object
-if(BUILD_SHARED_LIBS)
 add_library(onemath_dft OBJECT)
 add_deprecated_library(onemath_dft)
 target_sources(onemath_dft PRIVATE backends/descriptor.cpp dft_loader.cpp)
@@ -47,5 +46,3 @@ endif()
 
 include(WarningsUtils)
 target_link_libraries(onemath_dft PRIVATE onemath_warnings)
-
-endif()
