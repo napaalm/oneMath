@@ -143,14 +143,16 @@ set_target_properties(onemath PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
 )
 
-# Add the library to install package
-foreach(domain_lib ${ONEMATH_LIBS})
-  install(TARGETS ${domain_lib} EXPORT oneMathTargets)
-endforeach()
-install(TARGETS onemath EXPORT oneMathTargets
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
+if(BUILD_SHARED_LIBS)
+  # Add the library to install package
+  foreach(domain_lib ${ONEMATH_LIBS})
+    install(TARGETS ${domain_lib} EXPORT oneMathTargets)
+  endforeach()
+  install(TARGETS onemath EXPORT oneMathTargets
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+  )
+endif()
 
 add_deprecated_library(onemkl)
