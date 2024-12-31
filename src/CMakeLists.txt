@@ -113,42 +113,44 @@ generate_header_file()
 # Add recipe for onemath loader library
 if(BUILD_SHARED_LIBS)
   add_library(onemath SHARED)
-
-  # The loader library depends on all the backend libraries as it uses
-  # dlopen to load them at runtime.
-  # Use add_dependencies to ensure that all the backend libraries are
-  # (re-)built when compiling the loader or runtime binaries.
-  add_dependencies(onemath onemath_backend_libs)
-
-  target_include_directories(onemath
-    PUBLIC ${ONEMATH_INCLUDE_DIRS}
-  )
-  set_target_properties(onemath PROPERTIES
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-  )
-  # w/a for setting oneMath installed headers as -I instead of -isystem for cmake >= 3.25 for workable find_package(MKL) combination
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
-    set_target_properties(onemath PROPERTIES EXPORT_NO_SYSTEM true)
-  endif()
-
-  # Build dispatcher library
-  set (ONEMATH_LIBS ${TARGET_DOMAINS})
-  list(TRANSFORM ONEMATH_LIBS PREPEND onemath_)
-  target_link_libraries(onemath PUBLIC ${ONEMATH_LIBS})
-  set_target_properties(onemath PROPERTIES
-      INSTALL_RPATH "\$ORIGIN"
-      BUILD_WITH_INSTALL_RPATH TRUE
-  )
-
-  # Add the library to install package
-  foreach(domain_lib ${ONEMATH_LIBS})
-    install(TARGETS ${domain_lib} EXPORT oneMathTargets)
-  endforeach()
-  install(TARGETS onemath EXPORT oneMathTargets
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-  )
-
-  add_deprecated_library(onemkl)
+else()
+  add_library(onemath STATIC)
 endif()
+
+# The loader library depends on all the backend libraries as it uses
+# dlopen to load them at runtime.
+# Use add_dependencies to ensure that all the backend libraries are
+# (re-)built when compiling the loader or runtime binaries.
+add_dependencies(onemath onemath_backend_libs)
+
+target_include_directories(onemath
+  PUBLIC ${ONEMATH_INCLUDE_DIRS}
+)
+set_target_properties(onemath PROPERTIES
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+# w/a for setting oneMath installed headers as -I instead of -isystem for cmake >= 3.25 for workable find_package(MKL) combination
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
+  set_target_properties(onemath PROPERTIES EXPORT_NO_SYSTEM true)
+endif()
+
+# Build dispatcher library
+set (ONEMATH_LIBS ${TARGET_DOMAINS})
+list(TRANSFORM ONEMATH_LIBS PREPEND onemath_)
+target_link_libraries(onemath PUBLIC ${ONEMATH_LIBS})
+set_target_properties(onemath PROPERTIES
+    INSTALL_RPATH "\$ORIGIN"
+    BUILD_WITH_INSTALL_RPATH TRUE
+)
+
+# Add the library to install package
+foreach(domain_lib ${ONEMATH_LIBS})
+  install(TARGETS ${domain_lib} EXPORT oneMathTargets)
+endforeach()
+install(TARGETS onemath EXPORT oneMathTargets
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+
+add_deprecated_library(onemkl)
